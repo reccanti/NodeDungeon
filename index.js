@@ -1,27 +1,6 @@
 const readline = require("readline");
 const { Writable } = require("stream");
 
-// this stream is a wrapper around stdout.
-// it intercepts the user's input and only prints
-// it out if the "muted" property is true. Based
-// on this Stackoverflow answer:
-// https://stackoverflow.com/a/33500118
-class MutedStdOut extends Writable {
-  constructor({ muted, ...options }) {
-    super(options);
-    this.muted = muted;
-  }
-
-  _write(chunk, encoding, callback) {
-    if (!this.muted) {
-      process.stdout.write(chunk, encoding);
-    }
-    callback();
-  }
-}
-
-const out = new MutedStdOut({ muted: true });
-
 // allow the readline interface to respond
 // to keypress events
 readline.emitKeypressEvents(process.stdin);
@@ -31,8 +10,7 @@ if (process.stdin.isTTY) {
 
 // create interface
 const rl = readline.createInterface({
-  input: process.stdin,
-  output: out
+  input: process.stdin
 });
 
 // define inputs
@@ -45,7 +23,6 @@ const INPUTS = {
 };
 
 process.stdin.on("keypress", input => {
-  out.write(input);
   switch (input) {
     case INPUTS.UP:
       console.log("you moved up");
