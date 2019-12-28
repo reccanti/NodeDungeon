@@ -41,6 +41,7 @@ function getMovement() {
         break;
       default:
         console.log("sorry, I didn't understand that");
+        getMovement();
     }
   });
 }
